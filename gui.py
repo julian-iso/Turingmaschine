@@ -146,6 +146,10 @@ class GUI(tk.Frame):
         self.finalState.place(x = 550, y = 125, width = 50, height = 50)
         self.finalState.insert(0, "E")
 
+        self.emptyBand = tk.Entry(parent)
+        self.emptyBand.place(x = 0, y = 125, width = 50, height = 50)
+        self.emptyBand.insert(0, "#")
+
         tableLeft = tk.Button(parent,fg="#ffffff", bg="#2F3136", font= 60, text="<", command=self.tableLeft)
         tableLeft.place(x = 0, y = 225, width = 50, height = 250)
         
@@ -235,10 +239,17 @@ class GUI(tk.Frame):
         self.update()
     
     def moveCenter(self):
-        global bandIndex
-        bandIndex = -2
-        print("moved bandindex to center")
-        print(bandIndex)
+        global bandIndex, pointer
+        newIndex = -2 + pointer
+        diff = bandIndex - newIndex
+        print("diff: " + str(diff))
+        while diff != -2:
+            if diff < -2:
+                self.bandForward()
+                diff += 1
+            else:
+                self.bandBack()
+                diff -= 1
         self.update()
 
     def tableLeft(self):
@@ -340,9 +351,6 @@ class GUI(tk.Frame):
                 if (value == state):
                     return True
             return False
-
-        if "E" in states:
-            final = True 
                 
         for x in range(tableLength): #add exisiting states
             if (not stateExists(table[x][0])):
